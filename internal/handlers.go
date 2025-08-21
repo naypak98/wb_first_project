@@ -12,15 +12,13 @@ func GetOrderHandler(db *sql.DB) http.HandlerFunc {
 		orderID := r.URL.Path[len("/order/"):]
 		log.Println("Запрос заказа:", orderID)
 
-		// 1. Кэш
 		if order, ok := GetFromCache(orderID); ok {
-			log.Println("Нашёл в кэше:", orderID)
+			log.Println("Найден в кэше:", orderID)
 			w.Header().Set("Content-Type", "application/json")
 			_ = json.NewEncoder(w).Encode(order)
 			return
 		}
 
-		// 2. БД
 		order, err := GetOrderFromDB(db, orderID)
 		if err == sql.ErrNoRows {
 			log.Println("Заказ не найден в БД:", orderID)
@@ -32,12 +30,10 @@ func GetOrderHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		log.Println("Нашёл в БД:", orderID)
+		log.Println("Найден в БД:", orderID)
 
-		// 3. Кэшируем
 		SaveToCache(*order)
 
-		// 4. Отдаём JSON
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(order); err != nil {
 			log.Println("Ошибка кодирования JSON:", err)

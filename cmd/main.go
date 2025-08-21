@@ -12,15 +12,13 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.Close()
+	internal.LoadCacheFromDB(db)
 
-	// HTTP сервер
 	http.Handle("/order/", internal.WithCORS(internal.GetOrderHandler(db)))
 	log.Println("HTTP сервер запущен на :8081")
 	go http.ListenAndServe(":8081", nil)
 
-	// Kafka consumer
 	go internal.ConsumeOrders("localhost:9092", "orders", "order-group", db)
 
-	// Блокировка main
 	select {}
 }
