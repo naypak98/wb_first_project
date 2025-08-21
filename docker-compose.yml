@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   postgres:
     image: postgres:14
@@ -21,6 +23,7 @@ services:
       - KAFKA_CFG_PROCESS_ROLES=broker,controller
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:19093
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:19093
+      # Внешний доступ для Go-приложения на хосте:
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_KRAFT_CLUSTER_ID=n8b1Q9aK3Pz5J2lX9aV7gw==
@@ -39,6 +42,7 @@ services:
       - "8082:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: local
+      # Для Kafka UI внутри Docker используем имя контейнера:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
       DYNAMIC_CONFIG_ENABLED: "true"
     networks:
