@@ -14,7 +14,7 @@ func main() {
 	defer db.Close()
 
 	// HTTP сервер
-	http.HandleFunc("/order/", internal.GetOrderHandler(db))
+	http.Handle("/order/", internal.WithCORS(internal.GetOrderHandler(db)))
 	log.Println("HTTP сервер запущен на :8081")
 	go http.ListenAndServe(":8081", nil)
 
