@@ -15,20 +15,20 @@ services:
 
   kafka:
     image: bitnami/kafka:3.5.0
-    container_name: kafka1
+    container_name: kafka
     environment:
       - KAFKA_CFG_NODE_ID=1
       - KAFKA_CFG_PROCESS_ROLES=broker,controller
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka1:19093
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:19093
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:19093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka1:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_KRAFT_CLUSTER_ID=n8b1Q9aK3Pz5J2lX9aV7gw==
       - ALLOW_PLAINTEXT_LISTENER=yes
     ports:
       - "9092:9092"
     volumes:
-      - kafka1_data:/bitnami/kafka
+      - kafka_data:/bitnami/kafka
     networks:
       - kafka-net
 
@@ -46,7 +46,7 @@ services:
 
 volumes:
   pg_data:
-  kafka1_data:
+  kafka_data:
 
 networks:
   kafka-net:
